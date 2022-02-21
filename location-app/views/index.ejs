@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Location App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <style>
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+        border: 1px solid #ddd;
+      }
+      th{
+        background-color: rgb(5, 81, 182);
+          color:white;
+      }
+
+      th, td {
+        text-align: left;
+        padding: 8px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container mt-4">
+      <h3>Location to fetch Videos:</h3><br>
+      <form action="location" method="POST">
+          <div class="input-group flex-nowrap mx-auto mb-4">
+              <span class="input-group-text" id="addon-wrapping">Latitude</span>
+              <input name="lat" type="text" class="form-control" placeholder="Enter Latitude" aria-label="Latitude" aria-describedby="addon-wrapping">
+          </div>
+
+          <div class="input-group flex-nowrap mx-auto mb-4">
+              <span class="input-group-text" id="addon-wrapping">Longitude</span>
+              <input name="long" type="text" class="form-control" placeholder="Enter Longitude" aria-label="Longitude" aria-describedby="addon-wrapping">
+          </div>
+
+          <div class="col-auto mx-auto">
+              <button id = "send-location" type="submit" class="btn btn-primary mb-3" name="action" value="send">Send Location</button>
+              <button type="submit" class="btn btn-secondary mb-3" name="action" value="reset">Reset</button>
+          </div>
+          <div class="col-auto mx-auto">
+            <img id="loader" src="/images/infinity_loading.svg"/>
+          </div>
+        </form>
+
+        <div id = "result">
+
+        </div>
+    </div>
+
+    <script>
+        const getCookieValue = (name) => (
+            document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || ''
+        )
+	const deleteCookie = (name) => {
+		    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+	}
+        let sendLocationBtn = document.getElementById("send-location")
+        //let lat = document.getElementById("lat")
+        //let long = document.getElementById("long")
+        let loaderImage = document.getElementById("loader")
+        let result = document.getElementById("result")
+        loaderImage.style.display = "none"
+
+        if(getCookieValue("requestId")){
+            loaderImage.style.display = "block"
+            const timer = setInterval( async function() {
+            var myHeaders = new Headers();
+            myHeaders.append("Access-Control-Allow-Origin", "*");
+            var requestOptions = {
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow'
+        };
+            const videoList = await fetch(`<%- VIDEO_LIBRARY_URL %>?requestId=${getCookieValue("requestId")}`)
+            .then(data => data.json())
+            .then(response => {
+                //console.log(response, "response keys")
+                if(Object.keys(response).length > 0) {
+		                deleteCookie('requestId')
+                    clearInterval(timer)
+                    loaderImage.style.display = "none"
+                        var list = `<br><h5>Region: ${response.State[0]}</h5></br><table><tr>
+    <th>Title</th>
+    <th>Benefit</th>
+    <th>Category</th>
+    <th>Sub-category</th>
+    <th>Link</th>
+  </tr>`;
+                    console.log(response);
+                    response.Video.forEach(row => {
+                      list += `<tr>
+                        <td>${row.Video_Title}</td>
+                        <td>${row.Video_Benefit}</td>
+                        <td>${row.Category}</td>
+                        <td>${row.Sub_Category}</td>
+                        <td><a href =${row.YOUTUBE_ID}>${row.YOUTUBE_ID}</a></td>
+                      </tr>`
+                    });
+                    list+="</table>"
+                    document.getElementById("result").innerHTML = list;
+                }
+		  })
+		    .catch(err => console.log(err))
+            }, 10000);
+        }
+      </script>
+  </body>
+</html>
