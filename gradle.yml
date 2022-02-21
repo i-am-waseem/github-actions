@@ -1,5 +1,5 @@
 ---
-name: 'Changes for test image'
+name: 'Not changing for test image'
 
 on:
   push:
