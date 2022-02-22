@@ -28,8 +28,8 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: .
+          context: ./location-app
           file: ./location-app/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: iamwaseem/app:latest
+          tags: iamwaseem/test-app:latest
