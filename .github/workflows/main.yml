@@ -33,3 +33,9 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: iamwaseem/test-app:latest
+
+      - 
+        name: curl
+        uses: wei/curl@v1
+        with:
+          args: -d '{message:Test message}' -X POST https://jsonplaceholder.com/typicode/posts
