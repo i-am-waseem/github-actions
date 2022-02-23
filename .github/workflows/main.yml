@@ -12,30 +12,34 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v2
-      -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      -
-        name: Login to DockerHub
-        uses: docker/login-action@v1 
-        with:
-          username: ${{secrets.DOCKERHUB_USERNAME}}
-          password: ${{secrets.DOCKERHUB_PASSWORD}}
-      -
-        name: Build and push
-        uses: docker/build-push-action@v2
-        with:
-          context: ./location-app
-          file: ./location-app/Dockerfile
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: iamwaseem/test-app:latest
+      # -
+      #   name: Set up QEMU
+      #   uses: docker/setup-qemu-action@v1
+      # -
+      #   name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v1
+      # -
+      #   name: Login to DockerHub
+      #   uses: docker/login-action@v1 
+      #   with:
+      #     username: ${{secrets.DOCKERHUB_USERNAME}}
+      #     password: ${{secrets.DOCKERHUB_PASSWORD}}
+      # -
+      #   name: Build and push
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: ./location-app
+      #     file: ./location-app/Dockerfile
+      #     platforms: linux/amd64,linux/arm64
+      #     push: true
+      #     tags: iamwaseem/test-app:latest
 
       - 
         name: curl
-        uses: wei/curl@v1
-        with:
-          args: -d '{message:Test message}' -X POST https://jsonplaceholder.com/typicode/posts
+        run: |
+          curl --request POST \
+          --header 'content-type: application/json' \
+          --url https://jsonplaceholder.typicode.com/posts \
+          --data '{
+           "message": "Testing curl using commandline run...",
+           }'
