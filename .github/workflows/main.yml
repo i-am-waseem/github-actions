@@ -38,7 +38,6 @@ jobs:
         name: curl
         run: |
           curl --request POST \
-          --header 'content-type: application/json' \
           --url https://jsonplaceholder.typicode.com/posts \
           --data '{
            "message": "Testing curl using commandline run...",
