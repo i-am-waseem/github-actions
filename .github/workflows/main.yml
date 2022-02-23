@@ -33,7 +33,7 @@ jobs:
       #     platforms: linux/amd64,linux/arm64
       #     push: true
       #     tags: iamwaseem/test-app:latest
-      # Finally.
+      # Finally. Not done yet.
       - 
         name: curl
         run: |
