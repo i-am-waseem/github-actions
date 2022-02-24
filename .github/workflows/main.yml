@@ -37,6 +37,6 @@ jobs:
       - 
         name: curl
         run: |
-          curl --location --request POST 'http://3.14.85.185:8002/fs/post_kafka' \
+          curl --location --request POST 'http://18.221.148.219:3000/fs/post_kafka' \
           --header 'Content-Type: application/json' \
-          --data-raw '{"version": "120"}'
+          --data-raw '{"version": "10"}'
