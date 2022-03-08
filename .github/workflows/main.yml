@@ -1,43 +1,62 @@
-name: ci
-
+name: test
 on:
   push:
-    branches:
-      - 'main'
     tags:
       - 'v*.*.*'
-
 jobs:
-  docker:
+  test:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v2
-        
-      -
-        name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v3
-        with:
-          # list of Docker images to use as base name for tags
-          images: |
-            i-am-waseem/steward-test
-          # generate Docker tags based on the following events/attributes
-          tags: |
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=sha
-      - name: Echoing the output
+      - uses: actions/checkout@v2
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      - name: Check output
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
-          echo "Tags: "
-          echo "${{ steps.meta.outputs.tags }}"
-          echo "Labels: "
-          echo "${{ steps.meta.outputs.labels }}"
+          echo $RELEASE_VERSION
+          echo ${{ steps.vars.outputs.tag }}
+# name: ci
+
+# on:
+#   push:
+#     branches:
+#       - 'main'
+#     tags:
+#       - 'v*.*.*'
+
+# jobs:
+#   docker:
+#     runs-on: ubuntu-latest
+#     steps:
+#       -
+#         name: Checkout
+#         uses: actions/checkout@v2
+        
+#       -
+#         name: Docker meta
+#         id: meta
+#         uses: docker/metadata-action@v3
+#         with:
+#           # list of Docker images to use as base name for tags
+#           images: |
+#             i-am-waseem/steward-test
+#           # generate Docker tags based on the following events/attributes
+#           tags: |
+#             type=schedule
+#             type=ref,event=branch
+#             type=ref,event=pr
+#             type=semver,pattern={{version}}
+#             type=semver,pattern={{major}}.{{minor}}
+#             type=semver,pattern={{major}}
+#             type=sha
+#       - name: Echoing the output
+#         run: |
+#           echo "Tags: "
+#           echo "${{ steps.meta.outputs.tags }}"
+#           echo "Labels: "
+#           echo "${{ steps.meta.outputs.labels }}"
 #       -
 #         name: Set up QEMU
 #         uses: docker/setup-qemu-action@v1
