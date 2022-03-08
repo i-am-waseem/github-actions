@@ -37,7 +37,7 @@ jobs:
           file: ./location-app/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ["iamwaseem/steward-test:${{ steps.vars.outputs.tag }}", "iamwaseem/steward-test:latest]
+          tags: "iamwaseem/steward-test:${{ steps.vars.outputs.tag }}, iamwaseem/steward-test:latest"
 
 
 #       - name: Check output
