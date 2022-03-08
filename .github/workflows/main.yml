@@ -11,6 +11,12 @@ jobs:
       - name: Set output
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+        
+      - name: Check output
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+        run: |
+          echo "Released version is : ${{ steps.vars.outputs.tag }}"
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -30,8 +36,8 @@ jobs:
           context: ./location-app
           file: ./location-app/Dockerfile
           platforms: linux/amd64,linux/arm64
-          push: true
-          tags: i-am-waseem/steward-test:${{ steps.vars.outputs.tag }}
+          push: false
+          tags: "i-am-waseem/steward-test:${{ steps.vars.outputs.tag }}"
 
 
 #       - name: Check output
